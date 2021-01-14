@@ -1,19 +1,18 @@
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+#Get base image (Full .net core SDK)
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-env
 WORKDIR /app
-EXPOSE 80
 
-FROM microsoft/dotnet:2.2-sdk AS build
-WORKDIR /src
-COPY ["Api/Api.csproj", "Api/"]
-RUN dotnet restore "Api/Api.csproj"
-COPY . .
+#Copy csproj and restore
+COPY *.csproj ./
+RUN dotnet restore
+
+#Copy everything else 
+COPY . ./
 WORKDIR "/src/Api"
-RUN dotnet build "Api.csproj" -c Release -o /app
+RUN dotnet publish -c Release -o out
 
-FROM build AS publish
-RUN dotnet publish "Api.csproj" -c Release -o /app
-
-FROM base AS final
+#Generate running image 
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
 WORKDIR /app
-COPY --from=publish /app .
+COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "Api.dll"]

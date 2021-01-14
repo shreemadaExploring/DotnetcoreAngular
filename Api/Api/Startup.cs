@@ -30,14 +30,14 @@ namespace Api
                         (resolver as DefaultContractResolver).NamingStrategy = null;
                 });
 
-            var server = Configuration["DBserver"] ?? "(localdb)\\MSSQLLocalDB";
-            var port = Configuration["DBPort"] ?? "1443";
+            var server = Configuration["DBServer"] ?? "(localdb)\\MSSQLLocalDB";
+            var port = Configuration["DBPort"] ?? "1433";
             var user = Configuration["DBUser"] ?? "SA";
             var passwd = Configuration["DBPasswd"] ?? "Pa55w0rd!2021";
             var database = Configuration["Database"] ?? "Library";
 
             services.AddDbContext<LibraryContext>(options =>
-                options.UseSqlServer($"Server={server};Database={database};User ID={user};Password={passwd};MultipleActiveResultSets=True")
+                options.UseSqlServer($"Server={server},{port};Initial Catalog={database};User ID={user};Password={passwd};MultipleActiveResultSets=True")
             );
 
             //services.AddDbContext<LibraryContext>(options =>
