@@ -8,9 +8,9 @@ services:
       MSSQL_PID: Express
     ports: 
       - "1433:1433"
-  Books-Api:
+  books-api:
     build: .
     environment: 
-      DBServer: "ms-sql-server"
+      DBserver: "ms-sql-server"
     ports: 
       - "8080:80"
